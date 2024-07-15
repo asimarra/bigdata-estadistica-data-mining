@@ -1,0 +1,128 @@
+---
+title: "Ejercicios2"
+format: html
+editor: visual
+---
+
+## CSV edad española
+
+Usando el CSV del INE.¿Cual es la media de edad de la población española? ¿y la mediana? ¿la moda?
+
+$$
+    \bar{x} =  \frac{1}{\text{poblaciónTotal}} \sum _{i=1}^N edad_i · poblaciónConEdad_i 
+$$
+
+```{r}
+library(dplyr)
+library(tidyr)
+poblacion_raw<-read.csv("data/9663bsc.csv",skip=0,fileEncoding="ISO-8859-1",header=T, sep=';',stringsAsFactor=F)
+
+poblacion <- poblacion_raw |> mutate(Total=as.numeric(gsub("\\.","",Total))) |> pivot_wider(names_from = Sexo, values_from = Total)  |>
+ mutate(edad=as.numeric(gsub("año(s|)","",Edad.simple))) |> drop_na() |> select(-c(Periodo,Edad.simple)) |>
+ rename(Total='Ambos sexos') |> arrange(edad)
+```
+
+```{r}
+head(poblacion)
+```
+
+Primero calculamos la moda:
+
+```{r}
+cat("La edad más común es",poblacion[which.max(poblacion$Total),]$edad,"años")
+```
+
+La mediana de la población:
+
+```{r}
+poblacion$prob <- cumsum(poblacion$Total)/sum(poblacion$Total)
+cat("La edad mediana es",poblacion[which.min(abs(poblacion$prob-0.5)),]$edad,"años")
+```
+
+La media de la población:
+
+```{r}
+cat("La media de la poblacion total es",
+sum(poblacion$Total*poblacion$edad)/sum(poblacion$Total),
+"años"
+)
+```
+
+## Peso al nacer
+
+Leer el dataset que se encuentra en data/birthweight_reduced.csv.
+
+Para la columna Birthweight: Calcula la media de los dos grupos para madres fumadores y no fumadores. Calcula su intervalo de confianza.
+
+```{r}
+bwt <- read.csv("./data/birthweight_reduced.csv")
+head(bwt)
+```
+
+```{r}
+bwt$smoker <- factor(bwt$smoker, labels = c('No','Yes'))
+bwt_no_smoker <- bwt |> filter(smoker=='No')
+bwt_smoker <- bwt |> filter(smoker=='Yes')
+```
+
+
+Para NO fumadores
+```{r}
+t.test(bwt_no_smoker$Birthweight)
+```
+
+Para SI fumadores
+```{r}
+t.test(bwt_smoker$Birthweight)
+```
+
+```{r}
+bwt |> group_by(smoker) |> summarise(low=t.test(Birthweight)$conf.int[1], high=t.test(Birthweight)$conf.int[2])
+```
+
+
+
+## Ejemplo probabilidad COVID
+
+Ejercicio se resuelve usando la distribución binomial. Supongamos que tenemos una población donde 5 de cada 1000 personas están infectadas.
+
+Pintar una curva donde se represente en el eje Y la probabilidad de encontrar al menos un contagiado en función del número de personas dado por el eje X.
+
+Esto se haría utilizando una función binomial donde la probabilidad de que alguien esté infectado es 5/1000. x sería el número de personas y es un valor que puede ir de 1 hasta 1000. Usa la función dbinom.
+
+```{r}
+p <- 5/1000
+x <- 1:1000
+
+probs <- 1-dbinom(0,size=x, p=p)
+plot(x, probs)
+```
+
+Pintar una curva donde se represente en el eje Y la probabilidad de encontrar exactamente dos contagiados en función del número de personas dado por el eje X
+
+```{r}
+p <- 5/1000
+x <- 1:1000
+
+probs <- dbinom(2,size=x, p=p)
+plot(x, probs)
+```
+
+Pintar una curva donde se represente en el eje Y la probabilidad de encontrar dos o más contagiados en función del número de personas dado por el eje X
+
+```{r}
+p <- 5/1000
+x <- 1:1000
+
+probs <- 1-pbinom(1,size=x, p=p)
+plot(x, probs)
+```
+
+Probabilida de encontar 5 o más personas contagiadas en una población de 1000
+
+```{r}
+p <- 5/1000
+x <- 1000
+probs <- 1-pbinom(4,size=x, p=p)
+probs
+```
