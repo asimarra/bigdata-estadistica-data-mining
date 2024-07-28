@@ -4,7 +4,6 @@ format: html
 editor: visual
 ---
 
-
 ## CSV edad española
 
 Usando el CSV del INE.¿Cual es la media de edad de la población española? ¿y la mediana? ¿la moda?
@@ -30,34 +29,60 @@ head(poblacion)
 Primero calculamos la moda:
 
 ```{r}
+calcular_moda <- function(x) {
+  print(x)
+  
+ 
+}
 
+moda_total <- calcular_moda(poblacion$Total)
+cat("La moda es:", moda_total, "\n")
 ```
 
 La mediana de la población:
 
 ```{r}
-
+mediana_total <- median(poblacion$Total, na.rm = TRUE)
+cat("La mediana es:", mediana_total, "\n")
 ```
 
 La media de la población:
 
 ```{r}
-
+media_total <- mean(poblacion$Total, na.rm = TRUE)
+cat("La media es:", media_total, "\n")
 ```
 
 ## Peso al nacer
 
 Leer el dataset que se encuentra en data/birthweight_reduced.csv.
 
-Para la columna Birthweight:
- Calcula la media de los dos grupos para madres fumadores y no fumadores. Calcula su intervalo de confianza.
+Para la columna Birthweight: Calcula la media de los dos grupos para madres fumadores y no fumadores. Calcula su intervalo de confianza.
 
 ```{r}
 bwt <- read.csv("./data/birthweight_reduced.csv")
-head(bwt)
+#head(bwt)
+
+# mean_smoking <- mean(bwt$Birthweight[bwt$Smoker == "smoker"])
+# mean_non_smoking <- mean(bwt$Birthweight[bwt$Smoker == "non-smoker"])
+# mean_smoking
+
+# cat("fumadoras:", mean_smoking, "\n")
+# cat("No fumadoras:", mean_non_smoking, "\n")
+
+madres_fumadoras <- filter(bwt, smoker == 1)
+media_peso_madre_fumadoras <- mean(madres_fumadoras$Birthweight)
+
+madres_no_fumadoras <- filter(bwt, smoker == 0)
+media_peso_madre_no_fumadoras <- mean(madres_no_fumadoras$Birthweight)
+
+paste('El peso medio de los recien nacidos para madres no fumadoras es: ', media_peso_madre_no_fumadoras, 'lbs')
+paste('El peso medio de los recien nacidos para madres fumadoras es: ', media_peso_madre_fumadoras, 'lbs')
 ```
 
+```{r}
 
+```
 
 ## Ejemplo probabilidad COVID
 

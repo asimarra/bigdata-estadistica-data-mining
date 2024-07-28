@@ -31,8 +31,7 @@ Aplicaciones movil Android/iPhone: https://artofstat.com/art-of-stat-inference
 
 ## Estadística vs Machine Learning
 
-Más información aquí: 
-[Markdown-Cheatsheet](https://www.reddit.com/r/MachineLearningLounge/comments/9soaw4/let_me_fix_that_for_you/)
+Más información aquí: [Markdown-Cheatsheet](https://www.reddit.com/r/MachineLearningLounge/comments/9soaw4/let_me_fix_that_for_you/)
 
 -   Estadística: Trata de entender las variables y su relación entre ellas. Las estadísitcas te ayudan a entender como es tu población de datos.
 
@@ -205,7 +204,6 @@ print(paste("El valor del tercer elemento es:",alturas[3]))
 ```
 
 **¡¡En R los arrays empiezan en 1!!** ![Imagen no cargada. Edita y borra la \@](https://images-cdn.9gag.com/photo/aQegdy7_700b.jpg)
-
 
 Podemos dar nombres a cada elemento
 
